@@ -69,12 +69,11 @@ namespace WinFormsApp3
             string result = string.Join(", ", HotkeyList[0].Hotkey.Select(n => n.ToString()));
             label2.Text = $"listening for hotkey: {result}";
             HotkeyListener hotkeyListener = new(HotkeyList);
-            hotkeyListener.HotkeyTriggered += (hotkeyNamesArr) =>
+            hotkeyListener.HotkeyTriggered += (hotkeyName) =>
             {
                 string result = string.Join(", ", HotkeyList[0].Hotkey.Select(n => n.ToString()));
                 triggerCount += 1;
-                string hotkeyNames= string.Join(", ", hotkeyNamesArr.Select(n => n.ToString()));
-                label2.Text = $"hotkey {hotkeyNames} triggered: {result}, {triggerCount} times.";
+                label2.Text = $"hotkey {hotkeyName} triggered: {result}, {triggerCount} times.";
             };
         }
     }

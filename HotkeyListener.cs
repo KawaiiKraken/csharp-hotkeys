@@ -8,7 +8,7 @@
     public class HotkeyListener
     {
         // TODO make it return list of strings for matching hotkeys, not just the first one
-        public event Action<List<string>> HotkeyTriggered;
+        public event Action<string> HotkeyTriggered;
 
         private List<Keys> currentlyPressedKeys = new List<Keys>();
         private static List<HotkeyStruct> HotkeyList = new List<HotkeyStruct>();
@@ -84,7 +84,10 @@
             List<string> matchingHotkeys = ListTriggeredHotkeys();
             if (matchingHotkeys.Count > 0)
             {
-                HotkeyTriggered?.Invoke(matchingHotkeys);
+                for (int i = 0; i < matchingHotkeys.Count; i++)
+                {
+                    HotkeyTriggered?.Invoke(matchingHotkeys[i]);
+                }
             }
         }
     }
