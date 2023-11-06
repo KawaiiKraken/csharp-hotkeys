@@ -5,6 +5,7 @@ namespace WinFormsApp3
     {
         private static Label label1 = new Label();
         private static Label label2 = new Label();
+        public static Label label3 = new Label();
         private static HotkeyManager hotkeyManager = new HotkeyManager();
         private static List<HotkeyListener.HotkeyStruct> HotkeyList = new List<HotkeyListener.HotkeyStruct>();
         private static int triggerCount = 0;
@@ -18,6 +19,11 @@ namespace WinFormsApp3
             Form form = new Form();
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
+
+            label3.Dock = DockStyle.Top;
+            label3.TextAlign = ContentAlignment.TopLeft;
+            label3.Text = "default text 3";
+            form.Controls.Add(label3);
 
             label2.Dock = DockStyle.Top;
             label2.TextAlign = ContentAlignment.TopLeft;
@@ -34,7 +40,7 @@ namespace WinFormsApp3
             asyncButton1.Click += async (sender, e) => await AsyncButton1ClickHandler(sender, e);
             asyncButton1.Width = 200;
             asyncButton1.Height = 30;
-            asyncButton1.Top = 50;
+            asyncButton1.Top = 70;
             asyncButton1.Left = 50;
             form.Controls.Add(asyncButton1);
 
@@ -43,7 +49,7 @@ namespace WinFormsApp3
             asyncButton2.Click += AsyncButton2ClickHandler;
             asyncButton2.Width = 200;
             asyncButton2.Height = 30;
-            asyncButton2.Top = 100;
+            asyncButton2.Top = 120;
             asyncButton2.Left = 50;
             form.Controls.Add(asyncButton2);
 
@@ -63,11 +69,12 @@ namespace WinFormsApp3
             string result = string.Join(", ", HotkeyList[0].Hotkey.Select(n => n.ToString()));
             label2.Text = $"listening for hotkey: {result}";
             HotkeyListener hotkeyListener = new(HotkeyList);
-            hotkeyListener.HotkeyTriggered += (hotkeyName) =>
+            hotkeyListener.HotkeyTriggered += (hotkeyNamesArr) =>
             {
                 string result = string.Join(", ", HotkeyList[0].Hotkey.Select(n => n.ToString()));
                 triggerCount += 1;
-                label2.Text = $"hotkey {hotkeyName} triggered: {result}, {triggerCount} times.";
+                string hotkeyNames= string.Join(", ", hotkeyNamesArr.Select(n => n.ToString()));
+                label2.Text = $"hotkey {hotkeyNames} triggered: {result}, {triggerCount} times.";
             };
         }
     }

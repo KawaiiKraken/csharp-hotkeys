@@ -8,11 +8,12 @@
     public class HotkeyListener
     {
         // TODO make it return list of strings for matching hotkeys, not just the first one
-        public event Action<string> HotkeyTriggered;
+        public event Action<List<string>> HotkeyTriggered;
 
         private List<Keys> currentlyPressedKeys = new List<Keys>();
         private static List<HotkeyStruct> HotkeyList = new List<HotkeyStruct>();
-        private static int i;
+        private static List<string> LastListOfMatchingHotkeys = new List<string>();
+        private static List<string> ListOfMatchingHotkeys = new List<string>();
         public struct HotkeyStruct
         {
             public string Name;
@@ -40,35 +41,51 @@
             {
                 currentlyPressedKeys.Add(e.KeyCode);
 
-                if (HotkeyMatch())
-                {
-                    OnHotkeyTriggered();
-                }
+                CheckIfHotkeyTriggered();
             }
         }
 
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
             currentlyPressedKeys.Remove(e.KeyCode);
+            CheckIfHotkeyTriggered(); // in this case it doesnt check anything but resets state so hotkey can be triggered repeatedly
         }
 
-        private bool HotkeyMatch()
+        private List<string> ListTriggeredHotkeys()
         {
-            bool result = false;
-            for (i = 0; i < HotkeyList.Count; i++)
+            LastListOfMatchingHotkeys = new List<string>(HotkeyListener.ListOfMatchingHotkeys);
+            ListOfMatchingHotkeys.Clear();
+
+            for (int i = 0; i < HotkeyList.Count; i++)
             {
-                if (HotkeyList[i].Hotkey.All(hotkey => currentlyPressedKeys.Contains(hotkey)))
+                if (HotkeyList[i].Hotkey.TrueForAll(hotkey => currentlyPressedKeys.Contains(hotkey)))
                 {
-                    result = true; break;
+                    ListOfMatchingHotkeys.Add(HotkeyList[i].Name);
                 }
             }
-            return result;
+
+            // TODO fix bug where hotkey is triggered every second keypress if one of the keys is held down
+            var missingInList1 = ListOfMatchingHotkeys.Except(LastListOfMatchingHotkeys);
+            //var missingInList2 = LastListOfMatchingHotkeys.Except(ListOfMatchingHotkeys);
+            //var diffBoth = missingInList1.Concat(missingInList2);
+            string result = string.Join(", ", missingInList1);
+            string result2 = string.Join(", ", ListOfMatchingHotkeys);
+            string result3 = string.Join(", ", LastListOfMatchingHotkeys);
+            Program.label3.Text = $"current: {result2}, last: {result3}, diff: {result}";
+            List<string> diff = new(missingInList1);
+
+            return diff;
         }
 
-        private void OnHotkeyTriggered()
+        private void CheckIfHotkeyTriggered()
         {
-            HotkeyTriggered?.Invoke(HotkeyList[i].Name);
+            //string result = string.Join(", ", lastListOfMatchingHotkeys.Select(n => n.ToString()));
+            //MessageBox.Show(result);
+            List<string> matchingHotkeys = ListTriggeredHotkeys();
+            if (matchingHotkeys.Count > 0)
+            {
+                HotkeyTriggered?.Invoke(matchingHotkeys);
+            }
         }
     }
-
 }
