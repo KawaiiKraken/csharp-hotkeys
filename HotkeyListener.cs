@@ -7,14 +7,27 @@
 
     public class HotkeyListener
     {
-        public event Action<Keys[]> HotkeyTriggered;
+        // TODO make it return list of strings for matching hotkeys, not just the first one
+        public event Action<string> HotkeyTriggered;
 
         private List<Keys> currentlyPressedKeys = new List<Keys>();
-        private List<Keys> hotkeys = new List<Keys>();
-
-        public HotkeyListener(List<Keys> hotkeyList)
+        private static List<HotkeyStruct> HotkeyList = new List<HotkeyStruct>();
+        private static int i;
+        public struct HotkeyStruct
         {
-            hotkeys = hotkeyList;
+            public string Name;
+            public List<Keys> Hotkey;
+
+            public HotkeyStruct(string name, List<Keys> hotkey)
+            {
+                Name = name;
+                Hotkey = new List<Keys>(hotkey);
+            }
+        }
+
+        public HotkeyListener(List<HotkeyStruct> hotkeyList)
+        {
+            HotkeyList = hotkeyList;
 
             KeyboardHook keyboardHook = new KeyboardHook();
             keyboardHook.KeyDown += OnKeyDown;
@@ -41,12 +54,20 @@
 
         private bool HotkeyMatch()
         {
-            return hotkeys.All(hotkey => currentlyPressedKeys.Contains(hotkey));
+            bool result = false;
+            for (i = 0; i < HotkeyList.Count; i++)
+            {
+                if (HotkeyList[i].Hotkey.All(hotkey => currentlyPressedKeys.Contains(hotkey)))
+                {
+                    result = true; break;
+                }
+            }
+            return result;
         }
 
         private void OnHotkeyTriggered()
         {
-            HotkeyTriggered?.Invoke(hotkeys.ToArray());
+            HotkeyTriggered?.Invoke(HotkeyList[i].Name);
         }
     }
 
