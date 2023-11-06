@@ -6,6 +6,8 @@ namespace WinFormsApp3
         private static Label label1 = new Label();
         private static Label label2 = new Label();
         private static List<Keys> hotkeys = new List<Keys>();
+        private static HotkeyManager hotkeyManager = new HotkeyManager();
+        private static int triggerCount = 0;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -50,7 +52,6 @@ namespace WinFormsApp3
         private static async Task AsyncButton1ClickHandler(object sender, EventArgs e)
         {
             label1.Text = $"recording hotkey...";
-            HotkeyManager hotkeyManager = new HotkeyManager();
             hotkeys = await hotkeyManager.AddHotkey();
             hotkeys = new List<Keys>(hotkeys);
             string result = string.Join(", ", hotkeys.Select(n => n.ToString()));
@@ -64,7 +65,8 @@ namespace WinFormsApp3
             hotkeyListener.HotkeyTriggered += (hotkey) =>
             {
                 string result = string.Join(", ", hotkeys.Select(n => n.ToString()));
-                label2.Text = $"hotkey triggered: {result}";
+                triggerCount += 1;
+                label2.Text = $"hotkey triggered: {result}, {triggerCount} times.";
             };
         }
     }

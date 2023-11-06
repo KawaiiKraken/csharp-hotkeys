@@ -14,3 +14,4 @@ C:\Users\win10\source\repos\WinFormsApp3\obj\Debug\net8.0-windows\refint\WinForm
 C:\Users\win10\source\repos\WinFormsApp3\obj\Debug\net8.0-windows\WinFormsApp3.pdb
 C:\Users\win10\source\repos\WinFormsApp3\obj\Debug\net8.0-windows\WinFormsApp3.genruntimeconfig.cache
 C:\Users\win10\source\repos\WinFormsApp3\obj\Debug\net8.0-windows\ref\WinFormsApp3.dll
+C:\Users\win10\source\repos\WinFormsApp3\obj\Debug\net8.0-windows\WinFormsApp3.sourcelink.json
