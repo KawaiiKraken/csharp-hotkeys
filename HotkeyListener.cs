@@ -48,7 +48,7 @@
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
             currentlyPressedKeys.Remove(e.KeyCode);
-            CheckIfHotkeyTriggered(); // in this case it doesnt check anything but resets state so hotkey can be triggered repeatedly
+            CheckIfHotkeyTriggered(); // in this case it doesn't check anything but resets state so hotkey can be triggered repeatedly
         }
 
         private List<string> ListTriggeredHotkeys()
